@@ -6,7 +6,7 @@
 //
 #include "gate_menu.h"
 
-void add_button(menu* menu, button_handler func)
+void add_button(struct CSimMenu* menu, button_handler func)
 {
     if (menu->_numButtons >= MAX_BUTTONS)
     {
@@ -25,20 +25,19 @@ void add_button(menu* menu, button_handler func)
     menu->_nexty += 35;
 }
 
-menu* create_menu(void)
+struct CSimMenu* create_menu(void)
 {
-    menu* newMenu = (menu*)malloc(sizeof(menu));
+    struct CSimMenu* newMenu = (struct CSimMenu*)malloc(sizeof(struct CSimMenu));
     newMenu->_numButtons = 0;
     newMenu->_buttons = (button_t*)malloc(sizeof(button_t) * MAX_BUTTONS);
     newMenu->_nextx = 540;
     newMenu->_nexty = 0;
     
-    
     return newMenu;
 }
 
 
-void destroy_menu(menu* menu)
+void destroy_menu(struct CSimMenu* menu)
 {
     free(menu->_buttons);
 }

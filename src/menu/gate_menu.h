@@ -15,8 +15,9 @@
 
 #define MAX_BUTTONS 10
 
-typedef struct CSim csim;
-typedef void (*button_handler) (csim* sim);
+struct CSim;
+
+typedef void (*button_handler) (struct CSim* sim);
 
 typedef struct CSimButton {
     button_handler _handler;
@@ -24,17 +25,17 @@ typedef struct CSimButton {
     int _id;
 } button_t;
 
-typedef struct CSimMenu {
+struct CSimMenu {
     button_t* _buttons;
     int _numButtons;
     int _nextx;
     int _nexty;
-} menu;
+};
 
-void add_button(menu* menu, button_handler func);
+void add_button(struct CSimMenu* menu, button_handler func);
 
-menu* create_menu(void);
+struct CSimMenu* create_menu(void);
 
-void destroy_menu(menu* menu);
+void destroy_menu(struct CSimMenu* menu);
 
 #endif /* GATE_MENU_H */

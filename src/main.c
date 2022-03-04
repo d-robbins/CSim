@@ -6,7 +6,7 @@
 //  Created by David Robbins on 2/22/22.
 //
 
-#include "csim.h"
+#include "sim/csim.h"
 
 #include <SDL.h>
 
@@ -19,7 +19,7 @@ int main(int argc, char** argv)
         errorExit(SDL_GetError());
     }
 
-    csim* game = create_csim();
+    struct CSim* game = create_csim();
 
     run(game);
     cleanup(game);
