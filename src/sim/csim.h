@@ -9,9 +9,8 @@
 #include <SDL_image.h>
 
 #include "../component/gates.h"
-
 #include "../menu/gate_menu.h"
-
+#include "util.h"
 #include "render.h"
 
 #define CSIM_NAME "CSim"
@@ -29,13 +28,23 @@ enum STATE
 {
     RUNNING,
     EXIT,
-    MOVE_GATE
+    MOVE_GATE,
+    DRAW_WIRE
 };
 
 struct CSimComponents
 {
     gate_t** _gates;
     wire_t** _wires;
+
+    int _curwire;
+    int _curgate;
+};
+
+struct CSimTexture
+{
+    SDL_Texture* _ortexture;
+    SDL_Texture* _andtexture;
 };
 
 struct CSim
@@ -45,34 +54,27 @@ struct CSim
     
     struct CSimMenu* _menu;
     struct CSimComponents _components;
-    
-    int _curwire;
-    int _curgate;
-    
-    SDL_Texture* _ortexture;
-    SDL_Texture* _andtexture;
+    struct CSimTexture _textures;
     
     gate_t* _attachedGate;
 
     enum STATE _state;
 };
 
+struct CSim* createCSim(void);
 void run(struct CSim* sim);
-
 void cleanup(struct CSim* sim);
 
 void errorExit(const char* err);
 
-gate_t* add_gate(struct CSim* sim, int inports, int outports, enum GATE_TYPE type, gate_condition cond);
-wire_t* add_wire(struct CSim* sim, gate_t* g1, gate_t* g2);
+gate_t* addGate(struct CSim* sim, int inports, int outports, enum GATE_TYPE type, gate_condition cond);
+wire_t* addWire(struct CSim* sim, gate_t* g1, gate_t* g2);
 
 void onClickRelease(struct CSim* sim, SDL_Event* e);
 void onClickDown(struct CSim* sim, SDL_Event* e);
+
 gate_t* gateClicked(struct CSim* sim, SDL_Rect click);
-
-SDL_Texture* intialize_texture(struct CSim* sim, const char* path);
-
-struct CSim* create_csim(void);
+button_t* buttonClicked(struct CSim* sim, SDL_Rect click);
 
 void onClickAddAND(struct CSim* sim);
 void onClickAddOR(struct CSim* sim);

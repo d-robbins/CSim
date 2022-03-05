@@ -3,8 +3,8 @@
 
 struct CSim;
 
-void render_wires(struct CSim* sim);
-void render_gates(struct CSim* sim);
-void render_menu(struct CSim* sim);
+void renderWires(struct CSim* sim);
+void renderGates(struct CSim* sim);
+void renderMenu(struct CSim* sim);
 
 #endif // RENDER_SIM_H

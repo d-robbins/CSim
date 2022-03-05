@@ -5,7 +5,7 @@
 /// @param sinks number of input pins
 /// @param drains number of output pins
 /// @param cond gates condition
-gate_t* create_gate(int sinks, int drains, enum GATE_TYPE type, gate_condition cond)
+gate_t* createGate(int sinks, int drains, enum GATE_TYPE type, gate_condition cond)
 {
     gate_t* newGate = (gate_t*)malloc(sizeof(gate_t));
     
@@ -44,7 +44,7 @@ gate_t* create_gate(int sinks, int drains, enum GATE_TYPE type, gate_condition c
 
 /// AND gate condition
 /// @param gate gate to test
-float and_condition(gate_t* gate)
+float ANDCondition(gate_t* gate)
 {
     int i;
     
@@ -79,9 +79,25 @@ float and_condition(gate_t* gate)
     }
 }
 
+void freeGate(gate_t* gate)
+{
+    int i;
+    for (i = 0; i < gate->_sinksize; i++)
+    {
+        free(gate->_sinks[i]);
+    }
+
+    for (i = 0; i < gate->_drainsize; i++)
+    {
+        free(gate->_drains[i]);
+    }
+
+    free(gate);
+}
+
 /// OR gate condition
 /// @param gate gate to test
-float or_condition(gate_t* gate)
+float ORCondition(gate_t* gate)
 {
     int i;
     

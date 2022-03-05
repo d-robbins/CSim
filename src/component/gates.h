@@ -11,10 +11,10 @@
 #define MAX_PORTS 2
 
 /// OR gate gate_condition
-#define OR_GATE     or_condition
+#define AND_LOGIC     ANDCondition
 
 /// AND gate gate_condition
-#define AND_GATE    and_condition
+#define OR_LOGIC    ORCondition
 
 typedef struct CSimWire wire_t;
 typedef struct CSimGate gate_t;
@@ -54,9 +54,11 @@ typedef struct CSimGate
     wire_t** _drains;
 } gate_t;
 
-gate_t* create_gate(int sinks, int drains, enum GATE_TYPE type, gate_condition cond);
+gate_t* createGate(int sinks, int drains, enum GATE_TYPE type, gate_condition cond);
 
-float and_condition(gate_t* gate);
-float or_condition(gate_t* gate);
+void freeGate(gate_t* gate);
+
+float ANDCondition(gate_t* gate);
+float ORCondition(gate_t* gate);
 
 #endif // GATES_H

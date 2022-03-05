@@ -2,7 +2,7 @@
 
 #include "csim.h"
 
-void render_gates(struct CSim* sim)
+void renderGates(struct CSim* sim)
 {
     int i;
     for (i = 0; i < MAX_GATES; i++)
@@ -13,10 +13,10 @@ void render_gates(struct CSim* sim)
             switch(sim->_components._gates[i]->_type)
             {
                 case OR:
-                    gateTex = sim->_ortexture;
+                    gateTex = sim->_textures._ortexture;
                     break;
                 case AND:
-                    gateTex = sim->_andtexture;
+                    gateTex = sim->_textures._andtexture;
                     break;
                 default: break;
             }
@@ -35,7 +35,7 @@ void render_gates(struct CSim* sim)
     }
 }
 
-void render_wires(struct CSim* sim)
+void renderWires(struct CSim* sim)
 {
     int i;
     for (i = 0; i < MAX_WIRES; i++)
@@ -62,13 +62,12 @@ void render_wires(struct CSim* sim)
             
             int y2 = wire_drain_gate->_sdlgate.y + drain_interval + drain_interval * sim->_components._wires[i]->_drainport;
             
-            
             SDL_RenderDrawLine(sim->_renderer, x1, y1, x2, y2);
         }
     }
 }
 
-void render_menu(struct CSim* sim)
+void renderMenu(struct CSim* sim)
 {
     for (int i = 0; i < sim->_menu->_numButtons; i++)
     {

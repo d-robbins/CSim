@@ -22,10 +22,12 @@ typedef struct CSimWire
     gate_t* _draingate;
 } wire_t;
 
-wire_t* out_to_in(gate_t* g1, gate_t* g2);
+wire_t* createWire(gate_t* g1, gate_t* g2);
 
-void attach_wire_sink(gate_t* gate, wire_t* wire);
-void attach_wire_drain(gate_t* gate, wire_t* wire);
-void send_power(wire_t* wire, float power);
+void freeWire(wire_t* wire);
+
+void attachWireSink(gate_t* gate, wire_t* wire);
+void attachWireDrain(gate_t* gate, wire_t* wire);
+void sendPower(wire_t* wire, float power);
 
 #endif // WIRE_H

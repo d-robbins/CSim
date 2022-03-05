@@ -19,7 +19,7 @@ int main(int argc, char** argv)
         errorExit(SDL_GetError());
     }
 
-    struct CSim* game = create_csim();
+    struct CSim* game = createCSim();
 
     run(game);
     cleanup(game);

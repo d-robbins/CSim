@@ -32,10 +32,10 @@ struct CSimMenu {
     int _nexty;
 };
 
-void add_button(struct CSimMenu* menu, button_handler func);
+void addButton(struct CSimMenu* menu, button_handler func);
 
-struct CSimMenu* create_menu(void);
+struct CSimMenu* createMenu(void);
 
-void destroy_menu(struct CSimMenu* menu);
+void destroyMenu(struct CSimMenu* menu);
 
 #endif /* GATE_MENU_H */

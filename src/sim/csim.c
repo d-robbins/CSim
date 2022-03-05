@@ -5,9 +5,10 @@
 void run(struct CSim* sim)
 {
     SDL_Event e;
+    int x, y;
     
-    add_button(sim->_menu, onClickAddOR);
-    add_button(sim->_menu, onClickAddAND);
+    addButton(sim->_menu, onClickAddOR);
+    addButton(sim->_menu, onClickAddAND);
 
     while (sim->_state != EXIT)
     {
@@ -42,7 +43,6 @@ void run(struct CSim* sim)
         
         if ((sim->_state & MOVE_GATE) != 0)
         {
-            int x, y;
             SDL_GetMouseState(&x, &y);
             sim->_attachedGate->_sdlgate.x = x;
             sim->_attachedGate->_sdlgate.y = y;
@@ -51,9 +51,9 @@ void run(struct CSim* sim)
         SDL_SetRenderDrawColor(sim->_renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
         SDL_RenderClear(sim->_renderer);
         
-        render_gates(sim);
-        render_wires(sim);
-        render_menu(sim);
+        renderGates(sim);
+        renderWires(sim);
+        renderMenu(sim);
         
         SDL_RenderPresent(sim->_renderer);
     }
@@ -62,20 +62,22 @@ void run(struct CSim* sim)
 
 void onClickAddAND(struct CSim* sim)
 {
-    add_gate(sim, 2, 1, AND, AND_GATE);
+    addGate(sim, 2, 1, AND, AND_LOGIC);
 }
 
 void onClickAddOR(struct CSim* sim)
 {
-    add_gate(sim, 2, 1, OR, OR_GATE);
+    addGate(sim, 2, 1, OR, OR_LOGIC);
 }
 
-/// create a sandbox
-struct CSim* create_csim(void)
+/// create csim instance
+struct CSim* createCSim(void)
 {
     struct CSim* game = (struct CSim*)malloc(sizeof(struct CSim));
+ 
     game->_window = SDL_CreateWindow(CSIM_NAME, SDL_WINDOWPOS_UNDEFINED,
         SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_SHOWN);
+
     if (game->_window == NULL)
     {
         errorExit(SDL_GetError());
@@ -87,8 +89,8 @@ struct CSim* create_csim(void)
     game->_components._wires = (wire_t**)malloc(sizeof(wire_t*) * MAX_WIRES);
     game->_components._gates = (gate_t**)malloc(sizeof(gate_t*) * MAX_GATES);
     
-    game->_ortexture = NULL;
-    game->_andtexture = NULL;
+    game->_textures._andtexture = NULL;
+    game->_textures._ortexture = NULL;
     
     game->_attachedGate = NULL;
     
@@ -96,7 +98,7 @@ struct CSim* create_csim(void)
     {
         game->_components._wires[i] = NULL;
     }
-    
+
     for (int i = 0; i < MAX_GATES; i++)
     {
         game->_components._gates[i] = NULL;
@@ -104,40 +106,18 @@ struct CSim* create_csim(void)
     
     if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG))
     {
-        printf("SDL_image error %s\n", IMG_GetError());
-        exit(1);
+        errorExit(IMG_GetError());
     }
     
-    game->_ortexture = intialize_texture(game, "textures/or_gate.png");
-    game->_andtexture = intialize_texture(game, "textures/and_gate.png");
-        
-    game->_curgate = 0;
-    game->_curwire = 0;
+    game->_textures._ortexture = initializeTexture(game->_renderer, "textures/or_gate.png");
+    game->_textures._andtexture = initializeTexture(game->_renderer, "textures/and_gate.png");
+
+    game->_components._curgate = 0;
+    game->_components._curwire = 0;
     
-    game->_menu = create_menu();
+    game->_menu = createMenu();
 
     return game;
-}
-
-SDL_Texture* intialize_texture(struct CSim* sim, const char* path)
-{
-    SDL_Texture* newTex = NULL;
-    SDL_Surface* surface = IMG_Load(path);
-    if (surface == NULL)
-    {
-        printf("load image error %s\n", IMG_GetError());
-        exit(1);
-    }
-    
-    newTex = SDL_CreateTextureFromSurface(sim->_renderer, surface);
-    if (newTex == NULL)
-    {
-        printf("create image error %s\n", SDL_GetError());
-        exit(1);
-    }
-
-    SDL_FreeSurface(surface);
-    return newTex;   
 }
 
 
@@ -149,7 +129,7 @@ void cleanup(struct CSim* sim)
     {
         if (sim->_components._wires[i] != NULL)
         {
-            free(sim->_components._wires[i]);
+            freeWire(sim->_components._wires[i]);
         }
     }
     
@@ -157,18 +137,18 @@ void cleanup(struct CSim* sim)
     {
         if (sim->_components._gates[i] != NULL)
         {
-            free(sim->_components._gates[i]);
+            freeGate(sim->_components._gates[i]);
         }
     }
     
-    destroy_menu(sim->_menu);
+    destroyMenu(sim->_menu);
 
     free(sim->_menu);
     free(sim->_components._wires);
     free(sim->_components._gates);
 
-    SDL_DestroyTexture(sim->_andtexture);
-    SDL_DestroyTexture(sim->_ortexture);
+    SDL_DestroyTexture(sim->_textures._andtexture);
+    SDL_DestroyTexture(sim->_textures._ortexture);
 
     SDL_DestroyRenderer(sim->_renderer);
     SDL_DestroyWindow(sim->_window);
@@ -186,17 +166,16 @@ void errorExit(const char* err)
 /// @param cond  type of gate
 /// @param inports number of input pins
 /// @param outports number of output pins
-gate_t* add_gate(struct CSim* sim, int inports, int outports, enum GATE_TYPE type, gate_condition cond)
+gate_t* addGate(struct CSim* sim, int inports, int outports, enum GATE_TYPE type, gate_condition cond)
 {
-    gate_t* newGate = create_gate(inports, outports, type, cond);
+    gate_t* newGate = createGate(inports, outports, type, cond);
     
-    sim->_components._gates[sim->_curgate++] = newGate;
+    sim->_components._gates[sim->_components._curgate++] = newGate;
     
     // make sure max wires have been reached
-    if (sim->_curgate == MAX_GATES)
+    if (sim->_components._curgate == MAX_GATES)
     {
-        perror("MAX WIRES REACHED\n");
-        exit(1);
+        errorExit("max gates reached\n");
     }
     
     return newGate;
@@ -207,19 +186,18 @@ gate_t* add_gate(struct CSim* sim, int inports, int outports, enum GATE_TYPE typ
 /// @param sim workspace
 /// @param g1 output gate of wire
 /// @param g2 input gate of wire
-wire_t* add_wire(struct CSim* sim, gate_t* g1, gate_t* g2)
+wire_t* addWire(struct CSim* sim, gate_t* g1, gate_t* g2)
 {
-    wire_t* wire = out_to_in(g1, g2);
+    wire_t* wire = createWire(g1, g2);
     if (wire != NULL)
     {
-        sim->_components._wires[sim->_curwire++] = wire;
+        sim->_components._wires[sim->_components._curwire++] = wire;
         
         // make sure max wires have been reached
         // TODO: make _wires and _gates for sim dynamic
-        if (sim->_curwire == MAX_WIRES)
+        if (sim->_components._curwire == MAX_WIRES)
         {
-            perror("MAX WIRES REACHED\n");
-            exit(1);
+            errorExit("max wires reached\n");
         }
         
         return wire;
@@ -232,6 +210,8 @@ void onClickRelease(struct CSim* sim, SDL_Event* e)
 {
     if (e->button.button == SDL_BUTTON_LEFT)
     {       
+        SDL_Rect mouseClick = {.x = e->button.x, .y = e->button.y, .w = 10, .h = 10};
+
         if ((sim->_state & MOVE_GATE) != 0)
         {
             sim->_state &= (~MOVE_GATE);
@@ -239,24 +219,34 @@ void onClickRelease(struct CSim* sim, SDL_Event* e)
             return;
         }
 
-        SDL_Rect mouseClick = {.x = e->button.x, .y = e->button.y, .w = 10, .h = 10};
-
-        // for (int i = 0; i < sim->_menu->_numButtons; i++)
-        // {
-        //     if (SDL_IntersectRect(&sim->_menu->_buttons[i]._button, &mouseClick, &result) == SDL_TRUE)
-        //     {
-        //         sim->_menu->_buttons[i]._handler(sim);
-        //         return;
-        //     }
-        // }
-
-        gate_t* clicked = gateClicked(sim, mouseClick);
-        if (clicked != NULL)
+        button_t* bClicked = buttonClicked(sim, mouseClick);
+        if (bClicked != NULL)
         {
-            sim->_attachedGate = clicked;
+            bClicked->_handler(sim);
+            return;
+        }
+
+        gate_t* gClicked = gateClicked(sim, mouseClick);
+        if (gClicked != NULL)
+        {
+            sim->_attachedGate = gClicked;
             sim->_state |= MOVE_GATE;
+            return;
         }
     }
+}
+
+button_t* buttonClicked(struct CSim* sim, SDL_Rect click)
+{
+    SDL_Rect result;
+    for (int i = 0; i < sim->_menu->_numButtons; i++)
+    {
+        if (SDL_IntersectRect(&sim->_menu->_buttons[i]._button, &click, &result) == SDL_TRUE)
+        {
+            return &sim->_menu->_buttons[i];
+        }
+    }
+    return NULL;
 }
 
 gate_t* gateClicked(struct CSim* sim, SDL_Rect click)

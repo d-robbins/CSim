@@ -1,0 +1,11 @@
+{
+    "makefile.extensionOutputFolder": "./.vscode",
+    "files.associations": {
+        "csim.h": "c",
+        "gates.h": "c",
+        "stdlib.h": "c",
+        "wire.h": "c",
+        "sdl.h": "c",
+        "sdl_image.h": "c"
+    }
+}

@@ -9,7 +9,7 @@
  * @param g2 the gate whos input port will have wire attached
  * @return wire_t* created wire
  */
-wire_t* out_to_in(gate_t* g1, gate_t* g2)
+wire_t* createWire(gate_t* g1, gate_t* g2)
 {
     wire_t* newWire = (wire_t*)malloc(sizeof(wire_t));
     
@@ -20,16 +20,16 @@ wire_t* out_to_in(gate_t* g1, gate_t* g2)
     newWire->_draingate = NULL;
     newWire->_sinkgate = NULL;
     
-    // allow ability for now output to wire
+    // allow ability for no output to wire
     // for input pins
     if (g1 != NULL)
     {
-        attach_wire_sink(g1, newWire);
+        attachWireSink(g1, newWire);
     }
     
     if (g2 != NULL)
     {
-        attach_wire_drain(g2, newWire);
+        attachWireDrain(g2, newWire);
     }
     else
     {
@@ -43,7 +43,7 @@ wire_t* out_to_in(gate_t* g1, gate_t* g2)
 /// attach wires sink to gates drain
 /// @param gate gate whos drain will be attached to wires sink
 /// @param wire wire
-void attach_wire_sink(gate_t* gate, wire_t* wire)
+void attachWireSink(gate_t* gate, wire_t* wire)
 {
     wire->_sinkgate = gate;
 
@@ -56,7 +56,7 @@ void attach_wire_sink(gate_t* gate, wire_t* wire)
 /// attach wires drain to gates sink
 /// @param gate gate whos sink will be attached to wires drain
 /// @param wire wire
-void attach_wire_drain(gate_t* gate, wire_t* wire)
+void attachWireDrain(gate_t* gate, wire_t* wire)
 {
     wire->_draingate = gate;
 
@@ -72,7 +72,7 @@ void attach_wire_drain(gate_t* gate, wire_t* wire)
  * @param wire current wire receiving power
  * @param power power to send
  */
-void send_power(wire_t* wire, float power)
+void sendPower(wire_t* wire, float power)
 {
     if (wire == NULL)
         return;
@@ -94,12 +94,17 @@ void send_power(wire_t* wire, float power)
     wire->_power = power;
 
     // propogate power if gates condition met
-    float sendPower = draingate->_propogate(draingate);
+    float propPower = draingate->_propogate(draingate);
 
     int i;
     for (i = 0; i < draingate->_drainsize; i++)
     {
         // sendPower propogated to all the gates drains
-        send_power(draingate->_drains[i], sendPower);
+        sendPower(draingate->_drains[i], propPower);
     }
+}
+
+void freeWire(wire_t* wire)
+{
+    free(wire);
 }
