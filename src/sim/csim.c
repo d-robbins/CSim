@@ -1,5 +1,7 @@
 #include "csim.h"
 
+#include "../component/gate_layout.h"
+
 /// run the sandbox
 /// @param sim sandbox
 void run(struct CSim* sim)
@@ -24,10 +26,10 @@ void run(struct CSim* sim)
             { sim->_state = EXIT; } break;
 
             case SDL_MOUSEBUTTONUP:
-            { onClickRelease(sim, &e); } break;
+            {  } break;
                 
             case SDL_MOUSEBUTTONDOWN:
-            { onClickDown(sim, &e); } break;
+            { onClickRelease(sim, &e); } break;
                 
             case SDL_KEYDOWN:
             {
@@ -63,12 +65,12 @@ void run(struct CSim* sim)
 
 void onClickAddAND(struct CSim* sim)
 {
-    addGate(sim, 2, 1, AND);
+    addGate(sim, &AND_LAYOUT, AND);
 }
 
 void onClickAddOR(struct CSim* sim)
 {
-    addGate(sim, 2, 1, OR);
+    addGate(sim, &OR_LAYOUT, OR);
 }
 
 /// create csim instance
@@ -166,14 +168,14 @@ void errorExit(const char* err)
 }
 
 
-/// add a gate to the workspace
-/// @param sim  workspace
+/// add a gate
+/// @param sim  environment
 /// @param cond  type of gate
 /// @param inports number of input pins
 /// @param outports number of output pins
-gate_t* addGate(struct CSim* sim, int inports, int outports, enum GATE_TYPE type)
+gate_t* addGate(struct CSim* sim, struct PinLayout* gateLayout, enum GATE_TYPE type)
 {
-    gate_t* newGate = createGate(inports, outports, type);
+    gate_t* newGate = createGate(gateLayout, type);
     
     sim->_components._gates[sim->_components._curgate++] = newGate;
     
@@ -187,8 +189,8 @@ gate_t* addGate(struct CSim* sim, int inports, int outports, enum GATE_TYPE type
 }
 
 
-/// add a wire to the workspace
-/// @param sim workspace
+/// add a wire
+/// @param sim environment
 /// @param g1 output gate of wire
 /// @param g2 input gate of wire
 wire_t* addWire(struct CSim* sim, port_t* g1, port_t* g2)
@@ -215,7 +217,7 @@ void onClickRelease(struct CSim* sim, SDL_Event* e)
 {
     if (e->button.button == SDL_BUTTON_LEFT)
     {       
-        SDL_Rect mouseClick = {.x = e->button.x, .y = e->button.y, .w = 30, .h = 30};
+        SDL_Rect mouseClick = {.x = e->button.x, .y = e->button.y, .w = 50, .h = 50};
 
         if (sim->_state == MOVE_GATE)
         {
@@ -268,6 +270,8 @@ void buildWire(struct CSim* sim, gate_t* gateclicked, SDL_Rect* click)
         }
         else
         {
+                        printf("was null\n");
+
             return;
         }
 
@@ -292,6 +296,7 @@ void buildWire(struct CSim* sim, gate_t* gateclicked, SDL_Rect* click)
         }
         else
         {
+            printf("was null\n");
             return;
         }
 
@@ -307,14 +312,13 @@ void buildWire(struct CSim* sim, gate_t* gateclicked, SDL_Rect* click)
 void removeWire(struct CSim* sim, wire_t* wire)
 {
     // TODO: may be possible dangling pointer or mem leak
-    
+
     wire->_drainport->_wire = NULL;
     wire->_sinkport->_wire = NULL;
     for (int j = 0; j < MAX_WIRES; j++)
     {
         if (wire == sim->_components._wires[j])
         {
-            printf("FOUND\n");
             free(sim->_components._wires[j]);
             sim->_components._wires[j] = NULL;
         }

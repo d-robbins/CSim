@@ -7,6 +7,7 @@
 #include <SDL.h>
 
 #include "wire.h"
+#include "gate_layout.h"
 
 /// OR gate gate_condition
 #define AND_LOGIC     ANDCondition
@@ -64,7 +65,7 @@ typedef struct CSimGate
     port_t* _ports;
 } gate_t;
 
-gate_t* createGate(int sinks, int drains, enum GATE_TYPE type);
+gate_t* createGate(struct PinLayout* gate_layout, enum GATE_TYPE type);
 
 void freeGate(gate_t* gate);
 
@@ -74,5 +75,7 @@ float ORCondition(gate_t* gate);
 void moveGate(gate_t* gate, int x, int y);
 
 port_t* getPortClicked(gate_t* gate, SDL_Rect* click);
+
+void intitalizePorts(gate_t* gate, struct PinLayout* gateLayout);
 
 #endif // GATES_H

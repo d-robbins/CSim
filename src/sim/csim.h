@@ -71,7 +71,7 @@ void cleanup(struct CSim* sim);
 
 void errorExit(const char* err);
 
-gate_t* addGate(struct CSim* sim, int inports, int outports, enum GATE_TYPE type);
+gate_t* addGate(struct CSim* sim, struct PinLayout* gateLayout, enum GATE_TYPE type);
 wire_t* addWire(struct CSim* sim, port_t* g1, port_t* g2);
 
 void onClickRelease(struct CSim* sim, SDL_Event* e);

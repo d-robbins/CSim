@@ -5,62 +5,21 @@
 /// @param sinks number of input pins
 /// @param drains number of output pins
 /// @param cond gates condition
-gate_t* createGate(int sinks, int drains, enum GATE_TYPE type)
+gate_t* createGate(struct PinLayout* gate_layout, enum GATE_TYPE type)
 {
     gate_t* newGate = (gate_t*)malloc(sizeof(gate_t));
+    newGate->_ports = (port_t*)malloc(sizeof(port_t) * (gate_layout->_i + gate_layout->_o));
+    newGate->_portsize = gate_layout->_i + gate_layout->_o;
+    intitalizePorts(newGate, gate_layout);
     
-    newGate->_ports = (port_t*)malloc(sizeof(port_t) * (sinks + drains));
-    newGate->_portsize = sinks+drains;
-    
-    for (int i = 0; i < sinks; i++)
+    for (int i = 0; i < newGate->_portsize; i++)
     {
-        newGate->_ports[i]._type = IN;
-        printf("sink %d\n", i);
-    }
-
-    for (int i = sinks; i < (sinks + drains); i++)
-    {
-        newGate->_ports[i]._type = OUT;
-        printf("out %d\n", i);
-    }
-
-    int in = 0;
-    int out = 0;
-    for (int i = 0; i < (drains + sinks); i++)
-    {
-        newGate->_ports[i]._wire = NULL;
         newGate->_ports[i]._gate = newGate;
+        newGate->_ports[i]._wire = NULL;
         newGate->_ports[i]._portRect.w = 10;
         newGate->_ports[i]._portRect.h = 10;
-        newGate->_ports[i]._portRect.y = 0;
-        newGate->_ports[i]._portRect.x = 0;
-        
-        switch(newGate->_ports[i]._type)
-        {
-            case IN:
-            if (in == 0)
-            {
-                newGate->_ports[i]._offX = 0;
-                newGate->_ports[i]._offY = 10;
-            }
-            else if (in == 1)
-            {
-                newGate->_ports[i]._offX = 0;
-                newGate->_ports[i]._offY = 36;
-            }
-            in++;
-            break;
-            case OUT:
-            if (out == 0)
-            {
-                newGate->_ports[i]._offX = 94;
-                newGate->_ports[i]._offY = 22;
-            }
-            out++;
-            break;
-
-            default: break;
-        } 
+        newGate->_ports[i]._portRect.x = newGate->_ports[i]._offX;
+        newGate->_ports[i]._portRect.y = newGate->_ports[i]._offY;
     }
 
     SDL_Rect gateStructure = {.x = 0, .y = 0, .w = 100, .h = 50};
@@ -80,6 +39,24 @@ gate_t* createGate(int sinks, int drains, enum GATE_TYPE type)
     }
 
     return newGate;
+}
+
+void intitalizePorts(gate_t* gate, struct PinLayout* gateLayout)
+{
+    for (int in = 0; in < gateLayout->_i; in++)
+    {
+        gate->_ports[in]._offX = gateLayout->_in[in]._x;
+        gate->_ports[in]._offY = gateLayout->_in[in]._y;
+        gate->_ports[in]._type = IN;
+    }
+
+    for (int out = 0; out < gateLayout->_o; out++)
+    {
+        gate->_ports[out + gateLayout->_i]._offX = gateLayout->_out[out]._x;
+        gate->_ports[out + gateLayout->_i]._offY = gateLayout->_out[out]._y;
+        gate->_ports[out + gateLayout->_i]._type = OUT;
+    }
+
 }
 
 void moveGate(gate_t* gate, int x, int y)

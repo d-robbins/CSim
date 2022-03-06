@@ -6,6 +6,8 @@
         "stdlib.h": "c",
         "wire.h": "c",
         "sdl.h": "c",
-        "sdl_image.h": "c"
+        "sdl_image.h": "c",
+        "__locale": "c",
+        "ios": "c"
     }
 }

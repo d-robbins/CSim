@@ -1,5 +1,5 @@
 make --dry-run --keep-going --print-directory
 make: Entering directory `/Users/david/Documents/CircuitSim'
-gcc src/main.c src/sim/csim.c src/component/gates.c src/menu/gate_menu.c src/component/wire.c src/sim/render.c src/sim/util.c -D_THREAD_SAFE -I/opt/homebrew/include/SDL2 -L/opt/homebrew/lib -lSDL2 -lSDL2_image -o csim
+clang src/main.c src/sim/csim.c src/component/gates.c src/menu/gate_menu.c src/component/wire.c src/sim/render.c src/sim/util.c src/component/gate_layout.c -D_THREAD_SAFE -I/opt/homebrew/include/SDL2 -L/opt/homebrew/lib -lSDL2 -lSDL2_image -o csim
 make: Leaving directory `/Users/david/Documents/CircuitSim'
  
