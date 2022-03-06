@@ -31,21 +31,22 @@ void run(struct CSim* sim)
                 
             case SDL_KEYDOWN:
             {
-                if (e.key.keysym.sym == SDLK_m)
+                if (e.key.keysym.sym == SDLK_w)
                 {
-                    
+                    sim->_state = DRAW_WIRE;
                 }
-                
+
             } break;
             
             default: break;
         }
         
-        if ((sim->_state & MOVE_GATE) != 0)
+        if (sim->_state == MOVE_GATE)
         {
             SDL_GetMouseState(&x, &y);
             sim->_attachedGate->_sdlgate.x = x;
             sim->_attachedGate->_sdlgate.y = y;
+            moveGate(sim->_attachedGate, x, y);
         }
 
         SDL_SetRenderDrawColor(sim->_renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
@@ -62,12 +63,12 @@ void run(struct CSim* sim)
 
 void onClickAddAND(struct CSim* sim)
 {
-    addGate(sim, 2, 1, AND, AND_LOGIC);
+    addGate(sim, 2, 1, AND);
 }
 
 void onClickAddOR(struct CSim* sim)
 {
-    addGate(sim, 2, 1, OR, OR_LOGIC);
+    addGate(sim, 2, 1, OR);
 }
 
 /// create csim instance
@@ -84,6 +85,7 @@ struct CSim* createCSim(void)
     }
 
     game->_renderer = SDL_CreateRenderer(game->_window, -1, 0);
+
     game->_state = RUNNING;
     
     game->_components._wires = (wire_t**)malloc(sizeof(wire_t*) * MAX_WIRES);
@@ -93,6 +95,9 @@ struct CSim* createCSim(void)
     game->_textures._ortexture = NULL;
     
     game->_attachedGate = NULL;
+
+    game->_ingate = NULL;
+    game->_outgate = NULL;
     
     for (int i = 0; i < MAX_WIRES; i++)
     {
@@ -166,9 +171,9 @@ void errorExit(const char* err)
 /// @param cond  type of gate
 /// @param inports number of input pins
 /// @param outports number of output pins
-gate_t* addGate(struct CSim* sim, int inports, int outports, enum GATE_TYPE type, gate_condition cond)
+gate_t* addGate(struct CSim* sim, int inports, int outports, enum GATE_TYPE type)
 {
-    gate_t* newGate = createGate(inports, outports, type, cond);
+    gate_t* newGate = createGate(inports, outports, type);
     
     sim->_components._gates[sim->_components._curgate++] = newGate;
     
@@ -186,7 +191,7 @@ gate_t* addGate(struct CSim* sim, int inports, int outports, enum GATE_TYPE type
 /// @param sim workspace
 /// @param g1 output gate of wire
 /// @param g2 input gate of wire
-wire_t* addWire(struct CSim* sim, gate_t* g1, gate_t* g2)
+wire_t* addWire(struct CSim* sim, port_t* g1, port_t* g2)
 {
     wire_t* wire = createWire(g1, g2);
     if (wire != NULL)
@@ -210,11 +215,11 @@ void onClickRelease(struct CSim* sim, SDL_Event* e)
 {
     if (e->button.button == SDL_BUTTON_LEFT)
     {       
-        SDL_Rect mouseClick = {.x = e->button.x, .y = e->button.y, .w = 10, .h = 10};
+        SDL_Rect mouseClick = {.x = e->button.x, .y = e->button.y, .w = 30, .h = 30};
 
-        if ((sim->_state & MOVE_GATE) != 0)
+        if (sim->_state == MOVE_GATE)
         {
-            sim->_state &= (~MOVE_GATE);
+            sim->_state = RUNNING;
             sim->_attachedGate = NULL;
             return;
         }
@@ -229,9 +234,89 @@ void onClickRelease(struct CSim* sim, SDL_Event* e)
         gate_t* gClicked = gateClicked(sim, mouseClick);
         if (gClicked != NULL)
         {
+            if (sim->_state == DRAW_WIRE)
+            {
+                buildWire(sim, gClicked, &mouseClick);
+                return;
+            }
+
             sim->_attachedGate = gClicked;
-            sim->_state |= MOVE_GATE;
+            sim->_state = MOVE_GATE;
             return;
+        }
+    }
+}
+
+void buildWire(struct CSim* sim, gate_t* gateclicked, SDL_Rect* click)
+{
+    if (sim->_selec == 0)
+    {
+        port_t* port = getPortClicked(gateclicked, click);
+        if (port != NULL)
+        {
+            if (port->_type == IN)
+            {
+                return;  
+            }
+
+            if (port->_wire != NULL)
+            {
+                removeWire(sim, port->_wire);                
+            }
+
+            sim->_outgate = port;
+        }
+        else
+        {
+            return;
+        }
+
+        sim->_selec++;
+    }
+    else
+    {
+        port_t* port = getPortClicked(gateclicked, click);
+        if (port != NULL)
+        {
+            if (port->_type == OUT)
+            {
+                return;  
+            }
+
+            if (port->_wire != NULL)
+            {
+                removeWire(sim, port->_wire);
+            }
+
+            sim->_ingate = port;
+        }
+        else
+        {
+            return;
+        }
+
+        addWire(sim, sim->_outgate, sim->_ingate);
+
+        sim->_ingate = NULL;
+        sim->_outgate = NULL;
+        sim->_selec = 0;
+        sim->_state = RUNNING;
+    }          
+}
+
+void removeWire(struct CSim* sim, wire_t* wire)
+{
+    // TODO: may be possible dangling pointer or mem leak
+    
+    wire->_drainport->_wire = NULL;
+    wire->_sinkport->_wire = NULL;
+    for (int j = 0; j < MAX_WIRES; j++)
+    {
+        if (wire == sim->_components._wires[j])
+        {
+            printf("FOUND\n");
+            free(sim->_components._wires[j]);
+            sim->_components._wires[j] = NULL;
         }
     }
 }

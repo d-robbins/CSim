@@ -24,7 +24,7 @@
 
 enum GATE_TYPE;
 
-enum STATE 
+enum STATE
 {
     RUNNING,
     EXIT,
@@ -58,7 +58,11 @@ struct CSim
     
     gate_t* _attachedGate;
 
+    port_t* _outgate;
+    port_t* _ingate;
+
     enum STATE _state;
+    int _selec;
 };
 
 struct CSim* createCSim(void);
@@ -67,8 +71,8 @@ void cleanup(struct CSim* sim);
 
 void errorExit(const char* err);
 
-gate_t* addGate(struct CSim* sim, int inports, int outports, enum GATE_TYPE type, gate_condition cond);
-wire_t* addWire(struct CSim* sim, gate_t* g1, gate_t* g2);
+gate_t* addGate(struct CSim* sim, int inports, int outports, enum GATE_TYPE type);
+wire_t* addWire(struct CSim* sim, port_t* g1, port_t* g2);
 
 void onClickRelease(struct CSim* sim, SDL_Event* e);
 void onClickDown(struct CSim* sim, SDL_Event* e);
@@ -79,4 +83,6 @@ button_t* buttonClicked(struct CSim* sim, SDL_Rect click);
 void onClickAddAND(struct CSim* sim);
 void onClickAddOR(struct CSim* sim);
 
+void buildWire(struct CSim* sim, gate_t* gateclicked, SDL_Rect* click);
+void removeWire(struct CSim* sim, wire_t* wire);
 #endif // CSIM_H

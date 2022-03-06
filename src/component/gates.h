@@ -8,8 +8,6 @@
 
 #include "wire.h"
 
-#define MAX_PORTS 2
-
 /// OR gate gate_condition
 #define AND_LOGIC     ANDCondition
 
@@ -34,6 +32,23 @@ enum GATE_TYPE
     OR
 };
 
+enum PORT_TYPE
+{
+    IN,
+    OUT
+};
+
+typedef struct CSimPort
+{
+    SDL_Rect _portRect;
+    enum PORT_TYPE _type;
+    gate_t* _gate;
+    wire_t* _wire;
+    int _offX;
+    int _offY;
+
+} port_t;
+
 typedef struct CSimGate
 {   
     gate_condition _propogate;
@@ -42,23 +57,22 @@ typedef struct CSimGate
     
     int _powered;
     
-    int _sinksize;
-    int _drainsize;
-    
-    int _cursink;
-    int _curdrain;
-
     enum GATE_TYPE _type;
-    
-    wire_t** _sinks;
-    wire_t** _drains;
+
+    int _portsize;
+
+    port_t* _ports;
 } gate_t;
 
-gate_t* createGate(int sinks, int drains, enum GATE_TYPE type, gate_condition cond);
+gate_t* createGate(int sinks, int drains, enum GATE_TYPE type);
 
 void freeGate(gate_t* gate);
 
 float ANDCondition(gate_t* gate);
 float ORCondition(gate_t* gate);
+
+void moveGate(gate_t* gate, int x, int y);
+
+port_t* getPortClicked(gate_t* gate, SDL_Rect* click);
 
 #endif // GATES_H
