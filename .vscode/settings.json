@@ -8,6 +8,24 @@
         "sdl.h": "c",
         "sdl_image.h": "c",
         "__locale": "c",
-        "ios": "c"
-    }
+        "ios": "c",
+        "gate_layout.h": "c",
+        "util.h": "c",
+        "textures.h": "c",
+        "render.h": "c",
+        "vector": "c",
+        "gate_types.h": "c",
+        "gate_conditions.h": "c",
+        "components.h": "c",
+        "state.h": "c",
+        "window.h": "c",
+        "core.h": "c",
+        "typeinfo": "c",
+        "environment.h": "c",
+        "gate.h": "c",
+        "stdio.h": "c",
+        "pin_layout.h": "c",
+        "ui.h": "c"
+    },
+    "C_Cpp.default.configurationProvider": "ms-vscode.makefile-tools"
 }

@@ -1,5 +1,33 @@
-make --dry-run --keep-going --print-directory
+make --dry-run --always-make --keep-going --print-directory
 make: Entering directory `/Users/david/Documents/CircuitSim'
-clang src/main.c src/sim/csim.c src/component/gates.c src/menu/gate_menu.c src/component/wire.c src/sim/render.c src/sim/util.c src/component/gate_layout.c -D_THREAD_SAFE -I/opt/homebrew/include/SDL2 -L/opt/homebrew/lib -lSDL2 -lSDL2_image -o csim
+clang -Wall -c src/main.c -o src/main.o -D_THREAD_SAFE -I/opt/homebrew/include/SDL2
+mv src/main.o /Users/david/Documents/CircuitSim/objs/
+clang -Wall -c src/core/window.c -o src/core/window.o -D_THREAD_SAFE -I/opt/homebrew/include/SDL2
+mv src/core/window.o /Users/david/Documents/CircuitSim/objs/
+clang -Wall -c src/core/core.c -o src/core/core.o -D_THREAD_SAFE -I/opt/homebrew/include/SDL2
+mv src/core/core.o /Users/david/Documents/CircuitSim/objs/
+clang -Wall -c src/core/gates/gate.c -o src/core/gates/gate.o -D_THREAD_SAFE -I/opt/homebrew/include/SDL2
+mv src/core/gates/gate.o /Users/david/Documents/CircuitSim/objs/
+clang -Wall -c src/core/gates/and_gate.c -o src/core/gates/and_gate.o -D_THREAD_SAFE -I/opt/homebrew/include/SDL2
+mv src/core/gates/and_gate.o /Users/david/Documents/CircuitSim/objs/
+clang -Wall -c src/core/util/util.c -o src/core/util/util.o -D_THREAD_SAFE -I/opt/homebrew/include/SDL2
+mv src/core/util/util.o /Users/david/Documents/CircuitSim/objs/
+ 
+clang -Wall -c src/core/util/pin_layout.c -o src/core/util/pin_layout.o -D_THREAD_SAFE -I/opt/homebrew/include/SDL2
+mv src/core/util/pin_layout.o /Users/david/Documents/CircuitSim/objs/
+clang -Wall -c src/core/environment.c -o src/core/environment.o -D_THREAD_SAFE -I/opt/homebrew/include/SDL2
+mv src/core/environment.o /Users/david/Documents/CircuitSim/objs/
+clang -Wall -c src/core/gates/or_gate.c -o src/core/gates/or_gate.o -D_THREAD_SAFE -I/opt/homebrew/include/SDL2
+mv src/core/gates/or_gate.o /Users/david/Documents/CircuitSim/objs/
+clang -Wall -c src/core/ui/ui.c -o src/core/ui/ui.o -D_THREAD_SAFE -I/opt/homebrew/include/SDL2
+mv src/core/ui/ui.o /Users/david/Documents/CircuitSim/objs/
+clang -Wall -c src/core/ui/and_button.c -o src/core/ui/and_button.o -D_THREAD_SAFE -I/opt/homebrew/include/SDL2
+mv src/core/ui/and_button.o /Users/david/Documents/CircuitSim/objs/
+clang -Wall -c src/core/ui/ipin_button.c -o src/core/ui/ipin_button.o -D_THREAD_SAFE -I/opt/homebrew/include/SDL2
+mv src/core/ui/ipin_button.o /Users/david/Documents/CircuitSim/objs/
+ 
+clang -Wall -c src/core/ui/or_button.c -o src/core/ui/or_button.o -D_THREAD_SAFE -I/opt/homebrew/include/SDL2
+mv src/core/ui/or_button.o /Users/david/Documents/CircuitSim/objs/
+clang -Wall /Users/david/Documents/CircuitSim/objs/*.o -o csim -L/opt/homebrew/lib -lSDL2 -lSDL2_image
 make: Leaving directory `/Users/david/Documents/CircuitSim'
  

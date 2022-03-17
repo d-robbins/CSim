@@ -8,17 +8,14 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This program built for i386-apple-darwin11.3.0
  
 
-# Make data base, printed on Sun Mar  6 01:39:09 2022
+# Make data base, printed on Thu Mar 17 00:35:24 2022
 
 # Variables
 
- 
 # automatic
 <D = $(patsubst %/,%,$(dir $<))
 # automatic
 ?F = $(notdir $?)
-# makefile (from `makefile', line 1)
-SRC := src/main.c src/sim/csim.c src/component/gates.c src/menu/gate_menu.c src/component/wire.c src/sim/render.c src/sim/util.c src/component/gate_layout.c
 # environment
 VSCODE_LOG_NATIVE = false
 # automatic
@@ -35,8 +32,12 @@ SHELL = /bin/sh
 VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
 # environment
 _ = /usr/bin/make
+# makefile (from `makefile', line 5)
+CFLAGS := -Wall
 # makefile (from `makefile', line 1)
 MAKEFILE_LIST :=  makefile
+# makefile (from `makefile', line 4)
+LIB_FLAGS := -lSDL2 -lSDL2_image
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
@@ -44,7 +45,7 @@ __CFBundleIdentifier = com.microsoft.VSCode
 # environment
 INFOPATH = /opt/homebrew/share/info:
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/8w/0vk7kc490bb44zs5hk1q_0qm0000gn/T/vscode-ipc-62428128-eb15-4722-af16-ec98c5cc0416.sock
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/8w/0vk7kc490bb44zs5hk1q_0qm0000gn/T/vscode-ipc-32ca9c01-3ee2-424f-803b-f41d3565ddc6.sock
 # environment
 VSCODE_CWD = /
 # environment
@@ -56,13 +57,13 @@ ELECTRON_RUN_AS_NODE = 1
 # default
 .FEATURES := target-specific order-only second-expansion else-if archives jobserver check-symlink
 # environment
-SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.E1zeL67vfm/Listeners
+SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.4VqvFrrovy/Listeners
 # automatic
 %F = $(notdir $%)
 # environment
-DISPLAY = /private/tmp/com.apple.launchd.MZhk1NKAGL/org.xquartz:0
-# environment
 VSCODE_PIPE_LOGGING = true
+# makefile (from `makefile', line 1)
+OBJS := src/main.o src/core/window.o src/core/core.o src/core/gates/gate.o src/core/gates/and_gate.o src/core/util/util.o src/core/util/pin_layout.o src/core/environment.o src/core/gates/or_gate.o src/core/ui/ui.o src/core/ui/and_button.o src/core/ui/ipin_button.o src/core/ui/or_button.o
 # environment
 PWD = /Users/david/Documents/CircuitSim
 # environment
@@ -72,13 +73,13 @@ ORIGINAL_XDG_CURRENT_DESKTOP = undefined
 # environment
 MANPATH = /opt/homebrew/share/man::
 # environment
-VSCODE_AMD_ENTRYPOINT = vs/workbench/services/extensions/node/extensionHostProcess
+VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # environment
 HOME = /Users/david
 # default
 MAKEFILEPATH = $(shell /usr/bin/xcode-select -print-path 2>/dev/null || echo /Developer)/Makefiles
 # environment
-VSCODE_CODE_CACHE_PATH = /Users/david/Library/Application Support/Code/CachedData/f80445acd5a3dadef24aa209168452a3d97cc326
+VSCODE_CODE_CACHE_PATH = /Users/david/Library/Application Support/Code/CachedData/c722ca6c7eed3d7987c0d5c3df5c45f6b15e77d1
 # environment
 LOGNAME = david
 # environment
@@ -91,7 +92,7 @@ VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 XPC_FLAGS = 0x0
 # default
 MAKE = $(MAKE_COMMAND)
-# makefile (from `makefile', line 5)
+# makefile (from `makefile', line 6)
 EXC_NAME = csim
 # default
 MAKECMDGOALS := all
@@ -105,7 +106,6 @@ USER = david
 .DEFAULT_GOAL := all
 # makefile (from `makefile', line 2)
 INCLUDE := -D_THREAD_SAFE -I/opt/homebrew/include/SDL2
- 
 # automatic
 %D = $(patsubst %/,%,$(dir $%))
 # default
@@ -117,7 +117,7 @@ TMPDIR = /var/folders/8w/0vk7kc490bb44zs5hk1q_0qm0000gn/T/
 # automatic
 *F = $(notdir $*)
 # environment
-VSCODE_IPC_HOOK = /Users/david/Library/Application Support/Code/1.64.2-main.sock
+VSCODE_IPC_HOOK = /Users/david/Library/Application Support/Code/1.65.2-main.sock
 # makefile
 MAKEFLAGS = Rrqp
 # environment
@@ -150,16 +150,14 @@ LIBS := -L/opt/homebrew/lib
 ^F = $(notdir $^)
 # default
 SUFFIXES := 
-# makefile (from `makefile', line 4)
-FLAGS := -lSDL2 -lSDL2_image
 # environment
 MAKELEVEL := 0
 # environment
 LANG = C
 # environment
-VSCODE_PID = 35031
+VSCODE_PID = 27848
 # variable set hash-table stats:
-# Load=72/1024=7%, Rehash=0, Collisions=3/102=3%
+# Load=72/1024=7%, Rehash=0, Collisions=7/102=7%
 
 # Pattern-specific Variable Values
 
@@ -167,48 +165,90 @@ VSCODE_PID = 35031
 
 # Directories
 
-# . (device 16777231, inode 4399115): 10 files, no impossibilities.
+# . (device 16777233, inode 4399115): 11 files, no impossibilities.
+# src (device 16777233, inode 4401889): 5 files, no impossibilities so far.
 
-# 10 files, no impossibilities in 1 directories.
+# 16 files, no impossibilities in 2 directories.
 
 # Implicit Rules
 
-# No implicit rules.
+%.o: %.c
+#  commands to execute (from `makefile', line 15):
+	clang $(CFLAGS) -c $< -o $@ $(INCLUDE)
+	mv $@ $(shell pwd)/objs/
+	
+
+# 1 implicit rules, 0 (0.0%) terminal.
 
 # Files
 
-all:
+# Not a target:
+src/core/gates/gate.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+all: src/main.o src/core/window.o src/core/core.o src/core/gates/gate.o src/core/gates/and_gate.o src/core/util/util.o src/core/util/pin_layout.o src/core/environment.o src/core/gates/or_gate.o src/core/ui/ui.o src/core/ui/and_button.o src/core/ui/ipin_button.o src/core/ui/or_button.o
 #  Command-line target.
 #  Implicit rule search has not been done.
-#  Implicit/static pattern stem: `'
+#  File does not exist.
+#  File has been updated.
+#  Needs to be updated (-q is set).
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/6=0%
+#  commands to execute (from `makefile', line 9):
+	clang $(CFLAGS) $(shell pwd)/objs/*.o -o $(EXC_NAME) $(LIBS) $(LIB_FLAGS)
+	
+
+src/main.o: src/main.c
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: `src/main'
 #  File does not exist.
 #  File has been updated.
 #  Needs to be updated (-q is set).
 # automatic
-# @ := all
+# @ := src/main.o
 # automatic
 # % := 
 # automatic
-# * := 
+# * := src/main
 # automatic
-# + := 
+# + := src/main.c
 # automatic
 # | := 
 # automatic
-# < := 
+# < := src/main.c
 # automatic
-# ^ := 
+# ^ := src/main.c
 # automatic
-# ? := 
+# ? := src/main.c
 # variable set hash-table stats:
-# Load=8/32=25%, Rehash=0, Collisions=4/15=27%
-#  commands to execute (from `makefile', line 8):
-	clang $(SRC) $(INCLUDE) $(LIBS) $(FLAGS) -o $(EXC_NAME)
+# Load=8/32=25%, Rehash=0, Collisions=2/17=12%
+#  commands to execute (from `makefile', line 15):
+	clang $(CFLAGS) -c $< -o $@ $(INCLUDE)
+	mv $@ $(shell pwd)/objs/
 	
 
 # Not a target:
+src/core/util/pin_layout.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+src/core/core.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
 .SUFFIXES:
- 
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+src/core/ui/or_button.o:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -216,7 +256,34 @@ all:
 # Not a target:
 makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-03-06 01:39:05
+#  Last modified 2022-03-13 21:30:25
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+src/core/util/util.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+src/core/ui/ipin_button.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+src/core/gates/or_gate.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+src/main.c:
+#  Implicit rule search has been done.
+#  Last modified 2022-03-12 00:01:43
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -228,16 +295,56 @@ makefile:
 #  Modification time never checked.
 #  File has not been updated.
 
+# Not a target:
+src/core/ui/and_button.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+run: all
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `makefile', line 12):
+	./$(EXC_NAME)
+	
+
 clean:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `makefile', line 11):
+ 
+#  commands to execute (from `makefile', line 19):
+	rm objs/*.o
 	rm $(EXC_NAME)
 	
 
+# Not a target:
+src/core/environment.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+src/core/ui/ui.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+src/core/window.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+src/core/gates/and_gate.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
 # files hash-table stats:
-# Load=5/1024=0%, Rehash=0, Collisions=0/19=0%
+# Load=20/1024=2%, Rehash=0, Collisions=0/50=0%
 # VPATH Search Paths
 
 # No `vpath' search paths.
@@ -249,6 +356,6 @@ clean:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Sun Mar  6 01:39:09 2022
+# Finished Make data base on Thu Mar 17 00:35:24 2022
 
  

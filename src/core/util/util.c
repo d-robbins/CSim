@@ -1,6 +1,6 @@
 #include "util.h"
 
-SDL_Texture* initializeTexture(SDL_Renderer* renderer, const char* path)
+SDL_Texture* initialize_texture(SDL_Renderer* renderer, const char* path)
 {
     SDL_Texture* newTex = NULL;
     SDL_Surface* surface = IMG_Load(path);
@@ -18,5 +18,6 @@ SDL_Texture* initializeTexture(SDL_Renderer* renderer, const char* path)
     }
 
     SDL_FreeSurface(surface);
+    printf("Succesfully created texture: %s\n", path);
     return newTex;   
 }
